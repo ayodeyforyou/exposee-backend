@@ -1,0 +1,40 @@
+const express = require('express');
+const nodemailer = require('nodemailer');
+const cors = require('cors');
+require('dotenv').config(); // Add this line at the top after imports
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+app.use(cors());
+
+// Update these with your email and app password
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'ayodelemedubi01@gmail.com', // Set your Gmail address directly
+    pass: process.env.EMAIL_PASS        // Use environment variable for app password
+  }
+});
+
+app.post('/contact', async (req, res) => {
+  const { name, email, message } = req.body;
+  if (!name || !email || !message) {
+    return res.status(400).json({ error: 'All fields are required.' });
+  }
+  try {
+    await transporter.sendMail({
+      from: 'ayodelemedubi01@gmail.com', // Set sender to your Gmail address
+      to: 'ayodelemedubi01@gmail.com',   // Set recipient to your Gmail address
+      subject: `New Contact Form Submission from ${name}`,
+      text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`
+    });
+    res.status(200).json({ message: 'Message sent successfully!' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to send message.' });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
