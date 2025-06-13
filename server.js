@@ -11,7 +11,11 @@ app.use(cors({
     'http://127.0.0.1:5500',
     'http://localhost:5500',
     'https://exposee-backend.onrender.com',
-    'https://ayodeyforyou.github.io/whitesoup/'
+    'https://ayodeyforyou.github.io/whitesoup',
+    'https://ayodeyforyou.github.io/whitesoup/' // with trailing slash
+    // Add your custom domain here if you use one, e.g.:
+    // 'https://yourdomain.com',
+    // 'https://yourdomain.com/'
   ]
 }));
 
@@ -19,8 +23,8 @@ app.use(cors({
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'ayodelemedubi01@gmail.com', // Set your Gmail address directly
-    pass: process.env.EMAIL_PASS        // Use environment variable for app password
+    user: process.env.EMAIL_USER, // Use environment variable for Gmail address
+    pass: process.env.EMAIL_PASS  // Use environment variable for app password
   }
 });
 
@@ -31,8 +35,8 @@ app.post('/contact', async (req, res) => {
   }
   try {
     await transporter.sendMail({
-      from: 'ayodelemedubi01@gmail.com', // Set sender to your Gmail address
-      to: 'ayodelemedubi01@gmail.com',   // Set recipient to your Gmail address
+      from: process.env.EMAIL_USER, // Use environment variable for sender
+      to: process.env.EMAIL_USER,   // Use environment variable for recipient
       subject: `New Contact Form Submission from ${name}`,
       text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`
     });
