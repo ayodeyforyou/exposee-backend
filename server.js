@@ -6,7 +6,14 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://127.0.0.1:5500',
+    'http://localhost:5500',
+    'https://exposee-backend.onrender.com',
+    'https://ayodeyforyou.github.io/whitesoup/'
+  ]
+}));
 
 // Update these with your email and app password
 const transporter = nodemailer.createTransport({
